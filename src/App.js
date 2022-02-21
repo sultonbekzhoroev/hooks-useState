@@ -2,25 +2,39 @@ import { useState } from "react";
 import "./App.css";
 
 function App() {
-  // when we use the hooks the first parameter is variable and the second is function in array
-  const [counter, setCounter] = useState(0);
-  const [history, setHistory] = useState([]);
-  const addOne = () => {
-    setCounter((previusState) => {
-      setHistory([previusState]);
-      return previusState + 1;
-    });
+  const [stars, setStars] = useState(Array.from(Array(5).keys()));
+  const [rate, setRate] = useState(localStorage.getItem("rate"));
+
+  const handletClick = (index) => {
+    localStorage.setItem("rate", index);
+    setRate(index);
   };
 
-  const removeOne = () => {
-    setCounter((previusState) => previusState - 1);
+  const remove = () => {
+    localStorage.removeItem("rate");
+    setRate(0);
   };
   return (
     <div className="App">
-      <h1>Counter</h1>
-      <h2>{counter}</h2>
-      <button onClick={() => addOne()}>Add one</button>
-      <button onClick={() => removeOne()}>remove one</button>
+      <div className="star">
+        {stars.map((star, index) => {
+          return (
+            <div
+              style={{
+                display: "inline-block",
+                border: "1px solid black",
+                padding: "20px",
+              }}
+              className={index <= rate ? "filled" : ""}
+              onClick={() => handletClick(index)}
+            >
+              {index}
+            </div>
+          );
+        })}
+        <button onClick={() => remove()}>Remove from local</button>
+        <h2>{rate}</h2>
+      </div>
     </div>
   );
 }
